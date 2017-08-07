@@ -64,10 +64,29 @@ def classify_ica_components(**args):
     logging.info(" {0} : Classifying ICA components ...".format(datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S %Z %Y"),
                                              args["TrainingRData"].split('.')[0]))
     logging.info(cmd)
-    run(cmd, cwd=args["path"], stage='classifying', filename="_{0}".format(args["TrainingRData"].split('.')[0]))
+    run(cmd, cwd=args["path"], stage='classifying', filename="_{0}".format(os.path.basename(args["TrainingRData"]).split('.')[0]))
     elapsed = time.time() - t
     elapsed = elapsed / 60
     logging.info("Finished classifying ICA components. Time duration: {0} minutes".format(str(elapsed)))
+
+def clean(**args):
+    print(args)
+    args.update(os.environ)
+    cmd = '/fix1.06a/fix ' + \
+          '-a ' + \
+          '{thrTXT} ' + \
+          '-m -h {hp} ' + \
+          '{A}'
+    cmd = cmd.format(**args)
+    print(cmd)
+    t = time.time()
+    logging.info(
+        " {0} : Cleaning artefacts ... ".format(datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S %Z %Y")))
+    logging.info(cmd)
+    run(cmd, cwd=args["path"], stage='cleaning', filename='_{0}'.format(args["subj"]))
+    elapsed = time.time() - t
+    elapsed = elapsed / 60
+    logging.info("Finished cleaning artefacts. Time duration: {0} minutes".format(str(elapsed)))
 
 def accuracy_testing(**args):
     print(args)
@@ -96,9 +115,13 @@ parser.add_argument('-i', dest='input', help='List of subjects (text file with e
 parser.add_argument('-fn', dest='fn', help='Melodic ICA folder name of subjects', required=True)
 parser.add_argument('-o', dest='output', help='Output path to contain the results from testing stage', required=False)
 parser.add_argument('--stages', help='Which stages to run. Space separated list.',nargs='+',
-                    choices= ['train', 'classify', 'test'], default=['train', 'classify'])
+                    choices= ['train', 'classify', 'clean', 'test'], default=['train', 'classify', 'clean'])
 parser.add_argument('--thresh', help="Threshold value for classifying. Range 0-100 (typically 5-20). Default = 10.",default=10,
                     type=int)
+parser.add_argument('--aggressive', help="Apply aggressive (full variance) cleaning for FIX", action='store_true',
+                    required=False)
+parser.add_argument('--hp', help="High pass filter: temporal highpass full-width (2*sigma) in seconds. Default=2000"
+                                 "For detrending-like behavior, set highpass to 2000.", default=2000, type=int, required=False)
 args = parser.parse_args()
 
 starttime = time.time()
@@ -122,9 +145,11 @@ if not os.path.exists(args.pdir):
 
 ## do work
 subjICAs= []
+subjs=[]
 with open(args.input, 'r') as f:
     for line in f:
         subjID = line.rstrip('\n')
+        subjs.append(subjID)
         pos=args.fn.rfind("hp")
         fn = args.fn[0:(pos-1)]
         icaPath = os.path.join(args.pdir, subjID, '{0}_output'.format(subjID), 'sub-%s'%subjID, 'MNINonLinear',
@@ -157,6 +182,24 @@ if "classify" in args.stages:
                                                              ))])
         for stage, stage_func in classify_stages_dict.iteritems():
             stage_func()
+
+if "clean" in args.stages:
+    if args.aggressive:
+        A="-A"
+    else:
+        A=""
+    for i, subj in enumerate(subjICAs):
+        thrTXT = os.path.join(subj, 'fix4melview_{0}_thr{1}.txt'.format(args.Training, str(args.thresh)))
+        clean_stages_dict = OrderedDict([('clean', partial(clean,
+                                                           path=args.pdir,
+                                                           subj=subjs[i],
+                                                           thrTXT=thrTXT,
+                                                           hp=args.hp,
+                                                           A=A
+                                                           ))])
+        for stage, stage_func in clean_stages_dict.iteritems():
+            stage_func()
+
 
 if "test" in args.stages:
     # pathToTrain = os.path.join(args.pdir, 'train_' + args.Training, "{0}.RData".format(args.Training))

@@ -58,6 +58,10 @@ RUN chmod +x /rpackages/rpackages.sh
 COPY rpackages.txt /rpackages/rpackages.txt
 RUN cd /rpackages && bash rpackages.sh
 
+#install connectome workbench
+RUN apt-get update && apt-get -y install connectome-workbench=1.2.3-1~nd14.04+1
+ENV CARET7DIR=/usr/bin
+
 #COPY hcpbin /hcpbin
 COPY run.py /run.py
 RUN chmod +x run.py
