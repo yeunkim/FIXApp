@@ -161,6 +161,8 @@ if 'train' in args.stages:
     trainingFolder = os.path.join(args.pdir, 'train_' + args.Training)
     if not os.path.exists(trainingFolder):
         os.mkdir(trainingFolder)
+    if not os.path.exists(os.path.join(trainingFolder, 'logs')):
+        os.makedirs(os.path.join(trainingFolder, 'logs'))
 
     train_stages_dict = OrderedDict([('train', partial(train_data_fix,
                                                        path=trainingFolder,
