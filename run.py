@@ -115,7 +115,7 @@ parser.add_argument('-i', dest='input', help='List of subjects (text file with e
 parser.add_argument('-fn', dest='fn', help='Melodic ICA folder name of subjects', required=True)
 parser.add_argument('-o', dest='output', help='Output path to contain the results from testing stage', required=False)
 parser.add_argument('--stages', help='Which stages to run. Space separated list.',nargs='+',
-                    choices= ['train', 'classify', 'clean', 'test'], default=['train', 'classify', 'clean'])
+                    choices= ['train', 'classify', 'clean', 'test'], default=['classify', 'clean'])
 parser.add_argument('--thresh', help="Threshold value for classifying. Range 0-100 (typically 5-20). Default = 10.",default=10,
                     type=int)
 parser.add_argument('--aggressive', help="Apply aggressive (full variance) cleaning for FIX", action='store_true',
