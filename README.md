@@ -30,10 +30,10 @@ The files must be temporally filtered (high bandpass, usually 2000). If FIX feat
     * Classifying step must be run prior to this step. Or the text files can be created manually.
     * text file containing subject IDs at each new line must be created.
   * Usage:
-    ```
-    docker run -ti --rm -v /path/to/parent/directory/containing/subjs/:/data \ 
-    $CMD $TrainingDataName /data -i subj.txt -fn $fmri.ica --stages clean
-    ```
+```
+docker run -ti --rm -v /path/to/parent/directory/containing/subjs/:/data \ 
+$CMD $TrainingDataName /data -i subj.txt -fn $fmri.ica --stages clean
+```
     where:
     * $CMD : Docker image name
     * $TrainingDataName : Name of training dataset that was generated from the training step (i.e. HCP_hp2000) 
@@ -112,7 +112,8 @@ The files must be temporally filtered (high bandpass, usually 2000). If FIX feat
 3. ``` docker build -t fix . ```
 
 ## Convert to Singularity-compatible image ##
-``` docker run -v /var/run/docker.sock:/var/run/docker.sock \
+``` 
+docker run -v /var/run/docker.sock:/var/run/docker.sock \
  -v /path/to/where/singularityImg/will/be/output/:/output \
  --priveleged -t --rm singularityware/docker2singularity \
  -m " /mount/points/to/be/added " \
