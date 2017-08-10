@@ -61,7 +61,7 @@ The files must be temporally filtered (high bandpass, usually 2000). If FIX feat
     * subj.txt : Text containing subject IDs at each new line
     * $fmri.ica : MELODIC ICA folder names
   * Output: 
-    * All outputs (including ${TrainingDataName}.RData, logs, ${TrainingDataName}_LOO, test results) will be located in train_${TrainingDataName} (i.e. train_HCP_hp2000) within the parent directory
+    * All outputs (including ${TrainingDataName}.RData, logs, ${TrainingDataName}\_LOO, test results) will be located in train_${TrainingDataName} (i.e. train_HCP_hp2000) within the parent directory
     * **LOO test is automatically performed
     
 * **Accuracy Testing: Test the accuracy of an existing training dataset on a set of hand-labelled subjects**
@@ -123,6 +123,6 @@ When mounting, make sure that your Singularity configuration file has MOUNT HOST
 ### To run Singularity ###
 Just call the Singularity-compatible image with the arguments. For example, to run the main pipeline:
 
-    ```
-    $singularityImg $TrainingDataName /data -i subj.txt -fn $fmri.ica 
-    ```
+```
+$singularityImg $TrainingDataName /data -i subj.txt -fn $fmri.ica 
+```
