@@ -112,7 +112,10 @@ parser.add_argument('Training', help='For training and classifying: the name of 
                                      'For accuracy testing: the name of existing training dataset file (*.RData)')
 parser.add_argument('pdir', help='Path to parent directory of the subject folders')
 parser.add_argument('-i', dest='input', help='List of subjects (text file with each subject ID at each new line', required=True)
-parser.add_argument('-fn', dest='fn', help='Melodic ICA folder name of subjects', required=True)
+parser.add_argument('-fn', dest='fn', help='Melodic ICA folder name of subjects. If both directions are going to be used,'
+                                           'list both folders names delimited by commas (no space). Make sure both melodic'
+                                           'folders are located in each subject folder.'
+                                           'i.e. -fn task-rest_acq-AP_run-01,task-rest_acq-PA_run-01', required=True)
 parser.add_argument('-o', dest='output', help='Output path to contain the results from testing stage', required=False)
 parser.add_argument('--stages', help='Which stages to run. Space separated list.',nargs='+',
                     choices= ['train', 'classify', 'clean', 'test'], default=['classify', 'clean'])
@@ -146,15 +149,17 @@ if not os.path.exists(args.pdir):
 ## do work
 subjICAs= []
 subjs=[]
+ICAfolders=args.fn.split(',')
 with open(args.input, 'r') as f:
     for line in f:
         subjID = line.rstrip('\n')
         subjs.append(subjID)
         pos=args.fn.rfind("hp")
         fn = args.fn[0:(pos-1)]
-        icaPath = os.path.join(args.pdir, subjID, '{0}_output'.format(subjID), 'sub-%s'%subjID, 'MNINonLinear',
-                               'Results', fn, args.fn)
-        subjICAs.append(icaPath)
+        for ICAfolder in ICAfolders:
+            icaPath = os.path.join(args.pdir, subjID, '{0}_output'.format(subjID), 'sub-%s'%subjID, 'MNINonLinear',
+                                   'Results', fn, ICAfolder)
+            subjICAs.append(icaPath)
 subjICAstr = ' '.join(subjICAs)
 
 if 'train' in args.stages:
