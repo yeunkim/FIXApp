@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 import argparse
-from bids.grabbids import BIDSLayout
+# from bids.grabbids import BIDSLayout
 from functools import partial
 from collections import OrderedDict
 import os

@@ -38,7 +38,7 @@ The files must be temporally filtered (high bandpass, usually 2000). If FIX feat
     * $CMD : Docker image name
     * $TrainingDataName : Name of training dataset that was generated from the training step (i.e. HCP_hp2000) 
     * subj.txt : Text containing subject IDs at each new line
-    * $fmri.ica : MELODIC ICA folder names. If there is more than one folder to be included in training dataset, make sure to list them delimited by comma and no space (i.e. task-rest_acq-AP_run-01,task-rest_acq-PA_run-01)
+    * $fmri.ica : MELODIC ICA folder names. If there is more than one folder to be included in training dataset, make sure to list them delimited by comma and no space (i.e. task-rest_acq-AP_run-01_hp2000.ica,task-rest_acq-PA_run-01_hp2000.ica)
     * --aggressive : Option to apply aggressive (full variance) cleaning for FIX
     * --hp : Option to apply high pass filter (temporal highpass full-width (2\*sigma) in seconds). Default is 2000. -1 applies no filtering to motion confounds. 0 applies linear detrending only.
   * Output:
