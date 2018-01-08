@@ -35,6 +35,22 @@ def run(command, cwd=None, stage='', filename=''):
     if process.returncode != 0:
         raise Exception("Non zero return code: %d"%process.returncode)
 
+def feature_extraction(**args):
+    print(args)
+    args.update(os.environ)
+    cmd = '/fix1.06a/fix ' + \
+        '-f ' + \
+        '{melodicICA}'
+    cmd = cmd.format(**args)
+    t = time.time()
+    logging.info(" {0} : Extracting features for the subjects for {1} ... ".format(datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S %Z %Y"), args["Training"]))
+    logging.info(cmd)
+    run(cmd, cwd=args["path"], stage='featureExtraction', filename="_{0}".format(args["Training"]))
+    elapsed = time.time() - t
+    elapsed = elapsed /60
+    logging.info("Finished extracting features. Time duration: {0} minutes".format(str(elapsed)))
+
+
 def train_data_fix(**args):
     print(args)
     args.update(os.environ)
@@ -118,7 +134,7 @@ parser.add_argument('-fn', dest='fn', help='Melodic ICA folder name of subjects.
                                            'i.e. -fn task-rest_acq-AP_run-01,task-rest_acq-PA_run-01', required=True)
 parser.add_argument('-o', dest='output', help='Output path to contain the results from testing stage', required=False)
 parser.add_argument('--stages', help='Which stages to run. Space separated list.',nargs='+',
-                    choices= ['train', 'classify', 'clean', 'test'], default=['classify', 'clean'])
+                    choices= ['extract', 'train', 'classify', 'clean', 'test'], default=['classify', 'clean'])
 parser.add_argument('--thresh', help="Threshold value for classifying. Range 0-100 (typically 5-20). Default = 10.",default=10,
                     type=int)
 parser.add_argument('--aggressive', help="Apply aggressive (full variance) cleaning for FIX", action='store_true',
@@ -163,6 +179,21 @@ with open(args.input, 'r') as f:
                                    'Results', fn, ICAfolder)
             subjICAs.append(icaPath)
 subjICAstr = ' '.join(subjICAs)
+
+if 'extract' in args.stages:
+    trainingFolder = os.path.join(args.pdir, 'train_' + args.Training)
+    if not os.path.exists(trainingFolder):
+        os.mkdir(trainingFolder)
+    if not os.path.exists(os.path.join(trainingFolder, 'logs')):
+        os.makedirs(os.path.join(trainingFolder, 'logs'))
+
+    extract_stages_dict = OrderedDict([('extract', partial(feature_extraction,
+                                                       path=trainingFolder,
+                                                       Training=args.Training,
+                                                       melodicICA=subjICAstr)
+                                    )])
+    for stage, stage_func in extract_stages_dict.iteritems():
+        stage_func()
 
 if 'train' in args.stages:
     trainingFolder = os.path.join(args.pdir, 'train_' + args.Training)
