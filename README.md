@@ -20,7 +20,7 @@ The files must be temporally filtered (high bandpass, usually 2000). If FIX feat
     * $CMD : Docker image name
     * $TrainingDataName : Name of training dataset that was generated from the training step (i.e. HCP_hp2000) [ ${TrainingDataName}.RData must be located in train_${TrainingDataName} within the parent directory ]
     * subj.txt : Text containing subject IDs at each new line
-    * $fmri.ica : MELODIC ICA folder names. If there is more than one folder to be included in training dataset, make sure to list them delimited by comma and no space (i.e. task-rest_acq-AP_run-01,task-rest_acq-PA_run-01)
+    * $fmri.ica : MELODIC ICA folder names. If there is more than one folder to be included in training dataset, make sure to list them delimited by comma and no space (i.e. task-rest_acq-AP_run-01_hp2000.ica,task-rest_acq-PA_run-01_hp2000.ica)
     * $threshold : Threshold value for classifying. Range 0-100 (typically 5-20). Default is 10. Higher values imposes stricter standards and classifies less components as good
   * Output:
     * fix4melview_${TrainingDataName}\_thr${threshold}.txt will be located in each of the ${fmri}.ica folders
@@ -59,7 +59,7 @@ The files must be temporally filtered (high bandpass, usually 2000). If FIX feat
     * $CMD : Docker image name
     * $TrainingDataName : Name of training dataset to be generated (i.e. HCP_hp2000)
     * subj.txt : Text containing subject IDs at each new line
-    * $fmri.ica : MELODIC ICA folder names. If there is more than one folder to be included in training dataset, make sure to list them delimited by comma and no space (i.e. task-rest_acq-AP_run-01,task-rest_acq-PA_run-01)
+    * $fmri.ica : MELODIC ICA folder names. If there is more than one folder to be included in training dataset, make sure to list them delimited by comma and no space (i.e. task-rest_acq-AP_run-01_hp2000.ica,task-rest_acq-PA_run-01_hp2000.ica)
   * Output: 
     * All outputs (including ${TrainingDataName}.RData, logs, ${TrainingDataName}\_LOO, test results) will be located in train_${TrainingDataName} (i.e. train_HCP_hp2000) within the parent directory
     * **LOO test is automatically performed
@@ -78,7 +78,7 @@ The files must be temporally filtered (high bandpass, usually 2000). If FIX feat
     * $CMD : Docker image name
     * $TrainingDataName : Name of existing training dataset with full path
     * subj.txt : Text containing subject IDs at each new line
-    * $fmri.ica : MELODIC ICA folder names. If there is more than one folder to be included in training dataset, make sure to list them delimited by comma and no space (i.e. task-rest_acq-AP_run-01,task-rest_acq-PA_run-01)
+    * $fmri.ica : MELODIC ICA folder names. If there is more than one folder to be included in training dataset, make sure to list them delimited by comma and no space (i.e. task-rest_acq-AP_run-01_hp2000.ica,task-rest_acq-PA_run-01_hp2000.ica)
     * $output : Output folder where the test results will be stored
   * Output:
     * LOO-style results will be located in $output folder within the parent directory.
@@ -96,7 +96,7 @@ The files must be temporally filtered (high bandpass, usually 2000). If FIX feat
     * $CMD : Docker image name
     * $TrainingDataName : Name of exiarinf training dataset (i.e. HCP_hp2000 that is located in $pdir/train_HCP_hp2000)
     * subj.txt : Text containing subject IDs at each new line
-    * $fmri.ica : MELODIC ICA folder names. If there is more than one folder to be included in training dataset, make sure to list them delimited by comma and no space (i.e. task-rest_acq-AP_run-01,task-rest_acq-PA_run-01)
+    * $fmri.ica : MELODIC ICA folder names. If there is more than one folder to be included in training dataset, make sure to list them delimited by comma and no space (i.e. task-rest_acq-AP_run-01_hp2000.ica,task-rest_acq-PA_run-01_hp2000.ica)
     * Any optional arguments from classifying or cleaning stages can be used
     
 ### Running multiple stages ##
