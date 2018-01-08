@@ -154,9 +154,11 @@ with open(args.input, 'r') as f:
     for line in f:
         subjID = line.rstrip('\n')
         subjs.append(subjID)
-        pos=args.fn.rfind("hp")
-        fn = args.fn[0:(pos-1)]
+        #pos=args.fn.rfind("hp")
+        #fn = args.fn[0:(pos-1)]
         for ICAfolder in ICAfolders:
+            pos=ICAfolder.rfind("hp")
+            fn = ICAfolder[0:(pos-1)]
             icaPath = os.path.join(args.pdir, subjID, '{0}_output'.format(subjID), 'sub-%s'%subjID, 'MNINonLinear',
                                    'Results', fn, ICAfolder)
             subjICAs.append(icaPath)
